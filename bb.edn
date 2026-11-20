@@ -1,0 +1,3 @@
+{:tasks
+ {cli {:doc  "Verwaltungs-CLI: bb cli --list-users"
+       :task (apply shell "clojure" "-M:cli" *command-line-args*)}}}

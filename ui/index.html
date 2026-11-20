@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RowMania</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=fraunces:800,900&amp;family=nunito-sans:400,600,700,800&amp;display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section class="screen is-default" id="login" aria-label="Anmeldung">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1 class="outline">RowMania</h1>
+      <form class="login" action="#challenge">
+        <label for="login-name">Name
+          <input class="field" id="login-name" type="text" autocomplete="username" value="Mira">
+        </label>
+        <label for="login-pass">Passwort
+          <input class="field" id="login-pass" type="password" autocomplete="current-password" value="geheimgeheim">
+        </label>
+        <a class="btn" href="#challenge" role="button">Einloggen</a>
+      </form>
+    </div>
+    <div class="wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 110" preserveAspectRatio="none">
+        <path d="M0 50 Q90 10 180 50 T360 50 T540 50 T720 50 T900 50 T1080 50 T1260 50 T1440 50 V110 H0Z" fill="#cdbfe6"/>
+        <path d="M0 85 Q90 55 180 85 T360 85 T540 85 T720 85 T900 85 T1080 85 T1260 85 T1440 85 V110 H0Z" fill="#5aa89d"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="challenge" aria-label="Challenge-Übersicht">
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="#challenge">RowMania</a>
+      <nav class="tabs" aria-label="Hauptnavigation">
+        <a class="tab" href="#challenge" aria-current="page">Challenge</a>
+        <a class="tab" href="#sessions">Sessions</a>
+      </nav>
+      <a class="link" href="#login">Abmelden</a>
+    </header>
+
+    <div class="head">
+      <h1 class="outline title">Herbstmeilen</h1>
+      <p class="sub">1. Oktober bis 31. Dezember 2026</p>
+    </div>
+
+    <div class="goal">
+      <div class="goal-num outline">412<small>von 600 km</small></div>
+      <div class="track" id="track" role="img" aria-label="412 von 600 Kilometern"></div>
+      <ul class="contrib" id="contrib"></ul>
+    </div>
+
+    <div class="chart-wrap">
+      <h2>Verlauf</h2>
+      <svg id="chart" viewBox="0 0 760 300" role="img" aria-label="Kumulierte Kilometer pro Teilnehmer und Woche"></svg>
+    </div>
+
+    <footer>RowMania · Mockup</footer>
+  </div>
+</section>
+
+<section class="screen" id="sessions" aria-label="Sessions">
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="#challenge">RowMania</a>
+      <nav class="tabs" aria-label="Hauptnavigation">
+        <a class="tab" href="#challenge">Challenge</a>
+        <a class="tab" href="#sessions" aria-current="page">Sessions</a>
+      </nav>
+      <a class="link" href="#login">Abmelden</a>
+    </header>
+
+    <div class="head">
+      <h1 class="outline title">Sessions</h1>
+      <div class="chips" role="group" aria-label="Challenge wechseln">
+        <button class="chip" type="button" aria-pressed="true">Herbstmeilen</button>
+        <button class="chip" type="button" aria-pressed="false">Sommersprint</button>
+        <button class="chip" type="button" aria-pressed="false">Frühjahrsputz</button>
+      </div>
+    </div>
+
+    <form class="entry" action="#sessions">
+      <label for="km">Kilometer
+        <input class="field" id="km" type="number" step="0.1" min="0" value="6.5">
+      </label>
+      <label for="date">Datum
+        <input class="field" id="date" type="date" value="2026-11-19">
+      </label>
+      <button class="btn" type="button">Speichern</button>
+    </form>
+
+    <ul class="list">
+      <li><span>Do, 19. November</span><span class="km">6,5 km</span><button class="link" type="button">Ändern</button></li>
+      <li>
+        <div class="editing">
+          <label for="e-date">Datum<input class="field" id="e-date" type="date" value="2026-11-15"></label>
+          <label for="e-km">Kilometer<input class="field" id="e-km" type="number" step="0.1" value="8"></label>
+          <button class="btn" type="button">Speichern</button>
+        </div>
+      </li>
+      <li><span>Mi, 11. November</span><span class="km">5,2 km</span><button class="link" type="button">Ändern</button></li>
+      <li><span>So, 8. November</span><span class="km">10 km</span><button class="link" type="button">Ändern</button></li>
+    </ul>
+
+    <footer>RowMania · Mockup</footer>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>

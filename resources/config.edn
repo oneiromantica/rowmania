@@ -1,0 +1,7 @@
+;; Aero-Konfiguration. Alle Werte können per Umgebungsvariable überschrieben werden.
+{:host #or [#env ROWMANIA_HOST "localhost"]
+ :port #long #or [#env ROWMANIA_PORT 8080]
+ :cookie-secure #boolean #or [#env ROWMANIA_COOKIE_SECURE true]
+ :db   {:store {:backend :sqlite
+                :dbname  #or [#env ROWMANIA_DB_PATH "data/rowmania.sqlite"]
+                :id      #uuid "0b6f3c1e-7d5a-4e0e-9a43-5f6d1f0c2a77"}}}
