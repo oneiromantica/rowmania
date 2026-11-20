@@ -96,7 +96,11 @@
             jdkRunner = jdk;
             projectSrc = ./.;
             version = "0.1.0";
-            java-opts = [ "--enable-native-access=ALL-UNNAMED" ];
+            # Die mitgelieferte libsqlite3 lädt unter NixOS nicht; nixpkgs' sqlite kommt über LD_LIBRARY_PATH der Wrapper
+            java-opts = [
+              "--enable-native-access=ALL-UNNAMED"
+              "-Dsqlite4clj.native-lib=system"
+            ];
           };
         rowmaniaJar = mkRowmaniaJar {
           name = "rowmania/rowmania";
