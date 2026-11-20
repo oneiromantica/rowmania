@@ -5,7 +5,8 @@
             [rowmania.config :as config]
             [rowmania.db :as db]
             [rowmania.passwords :refer [hash-password]]
-            [rowmania.result :as r]))
+            [rowmania.result :as r])
+  (:gen-class))
 
 (defn run-command
   "Führt einen geparsten Befehl gegen die DB aus.

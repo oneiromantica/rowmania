@@ -1,5 +1,48 @@
 {
   "nodes": {
+    "clj-nix": {
+      "inputs": {
+        "devshell": "devshell",
+        "nix-fetcher-data": "nix-fetcher-data",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794654330,
+        "narHash": "sha256-Z9Z2a9/bGlwM8n1WhA8pp4pBXeybYswiJbgrpMN3n8U=",
+        "owner": "jlesquembre",
+        "repo": "clj-nix",
+        "rev": "eeae5dabead4008fad393e02f7b9f5bcd9a763a2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "repo": "clj-nix",
+        "type": "github"
+      }
+    },
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "clj-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791918082,
+        "narHash": "sha256-oN9JrhRfHa7MUTdUq+11dHn7u0Z4WfEA4mhzBq0/zoQ=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "9e29c63dde99a2d80c94b3d024c9768c01544558",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -15,6 +58,27 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nix-fetcher-data": {
+      "inputs": {
+        "nixpkgs": [
+          "clj-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792178580,
+        "narHash": "sha256-mgYSCONYCvRxseh3nssE2aLV3xeCXY6UVXkntgCUe+s=",
+        "owner": "jlesquembre",
+        "repo": "nix-fetcher-data",
+        "rev": "5df8c50525f4ea9f40b6ffe4183386d92e4874f5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "repo": "nix-fetcher-data",
         "type": "github"
       }
     },
@@ -36,6 +100,7 @@
     },
     "root": {
       "inputs": {
+        "clj-nix": "clj-nix",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs"
       }

@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    clj-nix = {
+      url = "github:jlesquembre/clj-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -11,6 +15,7 @@
       self,
       nixpkgs,
       flake-utils,
+      clj-nix,
     }:
     {
       nixosModules.default =
@@ -34,9 +39,19 @@
               type = lib.types.port;
               default = 8080;
             };
+            installCli = lib.mkEnableOption "das Kommando rowmania-ctl, das rowmania-cli als Dienstnutzer auf der Dienst-Datenbank ausführt";
           };
 
           config = lib.mkIf cfg.enable {
+            environment.systemPackages = lib.optional cfg.installCli (
+              pkgs.writeShellScriptBin "rowmania-ctl" ''
+                exec systemd-run --pty --wait --collect --quiet \
+                  -p User=rowmania -p DynamicUser=yes -p StateDirectory=rowmania \
+                  -E ROWMANIA_DB_PATH=/var/lib/rowmania/rowmania.sqlite \
+                  ${self.packages.${pkgs.system}.cli}/bin/rowmania-cli "$@"
+              ''
+            );
+
             systemd.services.rowmania = {
               description = "RowMania";
               wantedBy = [ "multi-user.target" ];
@@ -46,12 +61,9 @@
                 ROWMANIA_HOST = cfg.host;
                 ROWMANIA_PORT = toString cfg.port;
                 ROWMANIA_DB_PATH = "/var/lib/rowmania/rowmania.sqlite";
-                # clj legt Abhängigkeits-Caches unter HOME/XDG ab
-                HOME = "/var/lib/rowmania";
               };
               serviceConfig = {
                 ExecStart = "${self.packages.${pkgs.system}.default}/bin/start-server";
-                WorkingDirectory = "${self}";
                 DynamicUser = true;
                 StateDirectory = "rowmania";
                 Restart = "on-failure";
@@ -63,7 +75,10 @@
     // flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ clj-nix.overlays.default ];
+        };
         jdk = pkgs.jdk25;
         clojure = pkgs.clojure.override { jdk = jdk; };
         tools = [
@@ -72,25 +87,49 @@
           pkgs.git
         ];
 
+        # Uberjars mit Abhängigkeiten aus deps-lock.json
+        # (aktualisieren: nix run github:jlesquembre/clj-nix#deps-lock)
+        mkRowmaniaJar =
+          { name, main-ns }:
+          pkgs.mkCljBin {
+            inherit jdk name main-ns;
+            jdkRunner = jdk;
+            projectSrc = ./.;
+            version = "0.1.0";
+            java-opts = [ "--enable-native-access=ALL-UNNAMED" ];
+          };
+        rowmaniaJar = mkRowmaniaJar {
+          name = "rowmania/rowmania";
+          main-ns = "rowmania.core";
+        };
+        rowmaniaCliJar = mkRowmaniaJar {
+          name = "rowmania/rowmania-cli";
+          main-ns = "rowmania.cli";
+        };
+
         startServer = pkgs.writeShellApplication {
           name = "start-server";
-          runtimeInputs = tools;
+          runtimeInputs = [ rowmaniaJar ];
           text = ''
+            # coffi lädt libsqlite3 zur Laufzeit
+            export LD_LIBRARY_PATH="${pkgs.sqlite.out}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
             if [ -f "$PWD/.env" ]; then
               set -a
               # shellcheck disable=SC1091
               . "$PWD/.env"
               set +a
             fi
-            exec clj -X:start-server
+            exec rowmania
           '';
         };
 
         cli = pkgs.writeShellApplication {
           name = "rowmania-cli";
-          runtimeInputs = tools;
+          runtimeInputs = [ rowmaniaCliJar ];
           text = ''
-            exec clj -M:cli "$@"
+            # coffi lädt libsqlite3 zur Laufzeit
+            export LD_LIBRARY_PATH="${pkgs.sqlite.out}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+            exec rowmania-cli "$@"
           '';
         };
 
